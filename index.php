@@ -1,62 +1,89 @@
 <!DOCTYPE html>
-<html lang="en">
-   <head>
-      <title>GFG- Store Data</title>
-   </head>
-   <body>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <?php include "components/header.php" ?>
 
-   <?php include "components/header.php" ?>
+    <?php
+        $servername = "localhost";
+        $username = "root";
+        $password = "root";
+        $dbname = "ticket_db";
 
-      <center>
-         <h1>Storing Form data in Database</h1>
-         <form action="insert.php" method="post">
-            
-<p>
-               <label for="ID">ID:</label>
-               <input type="number" name="id" id="ID">
-            </p>
+        // Create connection
+        $conn = new mysqli($servername, $username, $password, $dbname);
+        // Check connection
+        if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+        }
 
-            
-<p>
-               <label for="E-mail">E-mail:</label>
-               <input type="email" name="email" id="E-mail">
-            </p>
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-            
-<p>
-               <label for="Platforms">Platforms:</label>
-               <input type="text" name="platforms" id="Platforms">
-            </p>
+            // collect value of input field
+            $data = $_REQUEST['val1'];
+        
+            if (empty($data)) {
+                echo "data is empty";
+            } else {
+                echo $data;
+            }
+        }
 
-            
-<p>
-               <label for="Region">Region:</label>
-               <input type="text" name="region" id="Region">
-            </p>
+        $sql = "SELECT * FROM tickets";
+        $result = $conn->query($sql);
 
-            
-<p>
-               <label for="Subject">Subject:</label>
-               <input type="text" name="subject" id="Subject">
-            </p>
+        if ($result->num_rows > 0) {
+            echo "<table>
+                    <tbody>
+                         <tr>
+                            <th>ID</th>
+                            <th>E-mail</th>
+                            <th>Platforms</th>
+                            <th>Region</th>
+                            <th>Subject</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>";
 
-<p>
-               <label for="Description">Description:</label>
-               <input type="text" name="description" id="Description">
-            </p>
+        while($row = $result->fetch_assoc()) {
+            echo        "<tr>".
+                            "<td>" . $row["ID"]. "</td>".
+                            "<td>" . $row["E-mail"]. "</td>".
+                            "<td>" . $row["Platforms"]. "</td>".
+                            "<td>" . $row["Region"]. "</td>".
+                            "<td>" . $row["Subject"]. "</td>".
+                            "<td>" . $row["Description"]. "</td>".
+                            "<td>" . $row["Status"]. "</td>".
+                            "<td>" . $row["Date"]. "</td>".
+                        "</tr>";
+        }
+        echo "      </tbody>
+                </table>";
 
-<p>
-               <label for="Status">Status:</label>
-               <input type="text" name="status" id="Status">
-            </p>
+        } else {
+            echo "0 results";
+        }
 
-<p>
-               <label for="Date">Date:</label>
-               <input type="date" name="date" id="Date">
-            </p>
+        $conn->close();
+    ?>
+    <style>
+        table{
+            border: 1px solid black;
 
-            <input type="submit" value="Submit">
-         </form>
-      </center>
-   </body>
+            th, td, tr{
+                border: 1px solid black;
+                text-align: center;
+                background-color: white;
+            }
+        }
+
+    </style>
+
+</body>
 </html>
